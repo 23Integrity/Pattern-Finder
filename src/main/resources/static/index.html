@@ -7,10 +7,9 @@
 <body>
 <div>
     <form method="POST" enctype="multipart/form-data" action="/rotate">
-        <table>
-            <tr><td>File to upload:</td><td><input type="file" name="file" accept="image/png" /></td></tr>
-            <tr><td></td><td><input type="submit" value="Upload" /></td></tr>
-        </table>
+        <label for="uploader">File to upload: </label>
+        <input id="uploader" type="file" name="file" accept="image/png" />
+        <input type="submit" value="Upload" />
     </form>
 </div>
 

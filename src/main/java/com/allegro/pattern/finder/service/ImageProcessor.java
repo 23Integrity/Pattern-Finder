@@ -73,10 +73,10 @@ public class ImageProcessor {
         if (patternArrayList.size() > 1) {
             throw new AmbiguousImageException();
         }
-        else if (patternArrayList.size() == 1) {
-            return rotate(patternArrayList.get(0)); // since the list has 1 element
+        else if (patternArrayList.isEmpty()) {
+            throw new NoPatternException();
         }
-        throw new NoPatternException();
+        return rotate(patternArrayList.get(0)); // since the list has 1 element
     }
 
     /**
@@ -164,19 +164,18 @@ public class ImageProcessor {
         BufferedImage img = new BufferedImage(image.getHeight(), image.getWidth(), image.getType());
         double height = img.getHeight();
         double width = img.getWidth();
+        Graphics2D graphics2D = img.createGraphics();
 
         // Vertical alignment
         if (pattern.getNeedsRotation()) {
             // 0 degrees rotation - white starts the pattern
             if (pattern.getAlignment() == 0) {
-                Graphics2D graphics2D = img.createGraphics();
                 graphics2D.translate((height - width) / 2, (height - width) / 2);
-                graphics2D.rotate(0, height / 2, width / 2);
+                graphics2D.rotate(0, width / 2, height / 2); // notice that I swapped width with height
                 graphics2D.drawRenderedImage(image, null);
             }
             // 180 degrees rotation - red starts the pattern
             else {
-                Graphics2D graphics2D = img.createGraphics();
                 graphics2D.translate((height - width) / 2, (height - width) / 2);
                 graphics2D.rotate(Math.PI, height / 2, width / 2);
                 graphics2D.drawRenderedImage(image, null);
@@ -185,22 +184,19 @@ public class ImageProcessor {
 
         // Horizontal alignment
         else {
-            // since the image can be rectangular, we need to swap width with height
-            height = img.getWidth();
-            width = img.getHeight();
-
             // 90 degrees rotation - white starts the pattern
             if (pattern.getAlignment() == 0) {
-                Graphics2D graphics2D = img.createGraphics();
+                height = img.getWidth();
+                width = img.getHeight();
+
                 graphics2D.translate((height - width) / 2, (height - width) / 2);
-                graphics2D.rotate(Math.PI / 2, height / 2, width / 2);
+                graphics2D.rotate(Math.PI / 2, height / 2, width / 2); // notice that I swapped width with height
                 graphics2D.drawRenderedImage(image, null);
             }
             // 270 degrees rotation - red starts the pattern
             else {
-                Graphics2D graphics2D = img.createGraphics();
                 graphics2D.translate((height - width) / 2, (height - width) / 2);
-                graphics2D.rotate(3 * Math.PI / 2, height / 2, width / 2);
+                graphics2D.rotate(3 * Math.PI / 2, width / 2, height / 2); // notice that I swapped width with height
                 graphics2D.drawRenderedImage(image, null);
             }
         }

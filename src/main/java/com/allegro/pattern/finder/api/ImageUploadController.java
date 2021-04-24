@@ -25,6 +25,7 @@ import java.util.Objects;
 public class ImageUploadController {
 
     /**
+     * Endpoint providing rotated image
      *
      * @param multipartFile uploaded file
      * @return ByteArray containing byte data of the image; since this endpoint produces IMAGE_PNG_VALUE MediaType, browser handles the conversion
@@ -38,8 +39,8 @@ public class ImageUploadController {
             if (Objects.equals(multipartFile.getContentType(), "image/png")) {
                 ImageProcessor processor = new ImageProcessor(ImageIO.read(multipartFile.getInputStream())); // Here's the magic
                 ByteArrayOutputStream bao = new ByteArrayOutputStream();
-                ImageIO.write(processor.processImage(), "png", bao); // writing image data to byte array output stream
-                return bao.toByteArray(); // returning image in byte array format
+                ImageIO.write(processor.processImage(), "png", bao); // converting image to binary
+                return bao.toByteArray();                                       // and returning it
             }
         }
         throw new FileEmptyException();
