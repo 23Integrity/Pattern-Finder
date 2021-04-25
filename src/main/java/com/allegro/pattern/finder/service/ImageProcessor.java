@@ -4,6 +4,8 @@ import com.allegro.pattern.finder.api.exceptions.AmbiguousImageException;
 import com.allegro.pattern.finder.api.exceptions.NoPatternException;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -68,7 +70,7 @@ public class ImageProcessor {
      * @throws AmbiguousImageException if there's more than 1 pattern provided
      * @throws NoPatternException if there's no pattern provided (ArrayList is empty)
      */
-    public BufferedImage processImage() {
+    public BufferedImage processImage() throws NoPatternException, AmbiguousImageException {
         ArrayList<Pattern> patternArrayList = findPatternList();
         if (patternArrayList.size() > 1) {
             throw new AmbiguousImageException();
@@ -76,7 +78,7 @@ public class ImageProcessor {
         else if (patternArrayList.isEmpty()) {
             throw new NoPatternException();
         }
-        return rotate(patternArrayList.get(0)); // since the list has 1 element
+        return rotate(patternArrayList.get(0));
     }
 
     /**
@@ -94,7 +96,7 @@ public class ImageProcessor {
         // Search array left - right
         for (String[] colors : imageAsStringMatrix) {
             for (int column = 0; column < colors.length; column++) {
-                if (colors[column].equals(WHITE) || colors[column].equals(RED)) {
+                if ((colors[column].equals(WHITE) || colors[column].equals(RED)) && column + 5 < colors.length) {
                     String probablePattern = colors[column] +
                             colors[column + 1] +
                             colors[column + 2] +
@@ -114,7 +116,8 @@ public class ImageProcessor {
         // Search the array up - down
         for (int row = 0; row < imageAsStringMatrix.length; row++) {
             for (int column = 0; column < imageAsStringMatrix[row].length; column++) {
-                if (imageAsStringMatrix[row][column].equals(WHITE) || imageAsStringMatrix[row][column].equals(RED)) {
+                if ((imageAsStringMatrix[row][column].equals(WHITE) || imageAsStringMatrix[row][column].equals(RED))
+                        && row + 5 < imageAsStringMatrix.length) {
                     String probablePattern = imageAsStringMatrix[row][column] +
                             imageAsStringMatrix[row + 1][column] +
                             imageAsStringMatrix[row + 2][column] +
@@ -161,46 +164,53 @@ public class ImageProcessor {
      * @return new BufferedImage containing processed image basing on the pattern provided.
      */
     private BufferedImage rotate(Pattern pattern) {
-        BufferedImage img = new BufferedImage(image.getHeight(), image.getWidth(), image.getType());
-        double height = img.getHeight();
-        double width = img.getWidth();
-        Graphics2D graphics2D = img.createGraphics();
-
-        // Vertical alignment
+        AffineTransform transform = new AffineTransform();
+        BufferedImage out;
+        // Vertical
         if (pattern.getNeedsRotation()) {
-            // 0 degrees rotation - white starts the pattern
+            double offset = 0;
+            out = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+
+            // no rotation
             if (pattern.getAlignment() == 0) {
-                graphics2D.translate((height - width) / 2, (height - width) / 2);
-                graphics2D.rotate(0, width / 2, height / 2); // notice that I swapped width with height
-                graphics2D.drawRenderedImage(image, null);
+                transform.translate(offset, offset);
+                transform.rotate(0, image.getWidth() / 2.0, image.getHeight() / 2.0);
+
+                AffineTransformOp atop = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
+                atop.filter(image, out);
             }
-            // 180 degrees rotation - red starts the pattern
+
+            // + 180 degrees rotation
             else {
-                graphics2D.translate((height - width) / 2, (height - width) / 2);
-                graphics2D.rotate(Math.PI, height / 2, width / 2);
-                graphics2D.drawRenderedImage(image, null);
+                transform.translate(offset, offset);
+                transform.rotate(Math.PI, image.getWidth() / 2.0, image.getHeight() / 2.0);
+
+                AffineTransformOp atop = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
+                atop.filter(image, out);
             }
         }
-
-        // Horizontal alignment
+        // Horizontal
         else {
-            // 90 degrees rotation - white starts the pattern
-            if (pattern.getAlignment() == 0) {
-                height = img.getWidth();
-                width = img.getHeight();
+            double offset = (image.getHeight() - image.getWidth()) / 2.0;
+            out = new BufferedImage(image.getHeight(), image.getWidth(), image.getType());
 
-                graphics2D.translate((height - width) / 2, (height - width) / 2);
-                graphics2D.rotate(Math.PI / 2, height / 2, width / 2); // notice that I swapped width with height
-                graphics2D.drawRenderedImage(image, null);
+            // no rotation
+            if (pattern.getAlignment() == 0) {
+                transform.rotate(Math.PI / 2, image.getWidth(), image.getHeight() / 2.0);
+
+                AffineTransformOp atop = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
+                atop.filter(image, out);
             }
-            // 270 degrees rotation - red starts the pattern
+
+            // + 180 degrees rotation
             else {
-                graphics2D.translate((height - width) / 2, (height - width) / 2);
-                graphics2D.rotate(3 * Math.PI / 2, width / 2, height / 2); // notice that I swapped width with height
-                graphics2D.drawRenderedImage(image, null);
+                transform.rotate(3 * Math.PI / 2, image.getWidth() / 2.0, image.getHeight() / 2.0);
+                transform.translate(offset, offset);
+
+                AffineTransformOp atop = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
+                atop.filter(image, out);
             }
         }
-        return img;
+        return out;
     }
-
 }
