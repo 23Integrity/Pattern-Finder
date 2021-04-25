@@ -171,7 +171,7 @@ public class ImageProcessor {
             double offset = 0;
             out = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
 
-            // no rotation
+            // no rotation (0 degrees)
             if (pattern.getAlignment() == 0) {
                 transform.translate(offset, offset);
                 transform.rotate(0, image.getWidth() / 2.0, image.getHeight() / 2.0);
@@ -180,7 +180,7 @@ public class ImageProcessor {
                 atop.filter(image, out);
             }
 
-            // + 180 degrees rotation
+            // + 180 degrees rotation (180 degrees)
             else {
                 transform.translate(offset, offset);
                 transform.rotate(Math.PI, image.getWidth() / 2.0, image.getHeight() / 2.0);
@@ -194,15 +194,16 @@ public class ImageProcessor {
             double offset = (image.getHeight() - image.getWidth()) / 2.0;
             out = new BufferedImage(image.getHeight(), image.getWidth(), image.getType());
 
-            // no rotation
+            // no rotation (90 degrees)
             if (pattern.getAlignment() == 0) {
-                transform.rotate(Math.PI / 2, image.getWidth(), image.getHeight() / 2.0);
+                transform.rotate(Math.PI / 2, image.getWidth() / 2.0, image.getHeight() / 2.0);
+                transform.translate(-offset, -offset);
 
                 AffineTransformOp atop = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
                 atop.filter(image, out);
             }
 
-            // + 180 degrees rotation
+            // + 180 degrees rotation (270 degrees)
             else {
                 transform.rotate(3 * Math.PI / 2, image.getWidth() / 2.0, image.getHeight() / 2.0);
                 transform.translate(offset, offset);

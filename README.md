@@ -4,7 +4,7 @@ Finding a 6x1 (3px white - 3px red) stripe pattern on provided image.
 ## Build Tools
 App was written using JDK 11. 
 To build the app, you need Maven. 
-Use: `mvn clean package spring-boot:repackage` to build the app. Then issue `java -jar target/Pattern.Finder-0.0.1-SNAPSHOT.jar`  in the same directory to run it. 
+Use: `mvn clean package spring-boot:repackage` to build the app. Then issue `java -jar target/Pattern.Finder-final.jar`  in the same directory to run it. 
 
 ## Using
 After starting the app, it should be available at http://localhost:8080 , where you can choose a file to upload. 

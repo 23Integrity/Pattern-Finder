@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.allegro</groupId>
 	<artifactId>pattern.finder</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>final</version>
 	<name>pattern.finder</name>
 	<description>Finding white-red stripe pattern in provided image</description>
 	<properties>
