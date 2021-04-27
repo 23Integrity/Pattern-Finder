@@ -1,4 +1,4 @@
-package com.allegro.pattern.finder.api.exceptions;
+package com.michalwesoly.pattern.finder.api.exceptions;
 
 /**
  * Exception thrown when provided image has more than 1 pattern and they're conflicting

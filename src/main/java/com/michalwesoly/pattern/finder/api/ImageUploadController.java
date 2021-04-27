@@ -1,8 +1,8 @@
-package com.allegro.pattern.finder.api;
+package com.michalwesoly.pattern.finder.api;
 
-import com.allegro.pattern.finder.api.exceptions.AmbiguousImageException;
-import com.allegro.pattern.finder.api.exceptions.NoPatternException;
-import com.allegro.pattern.finder.service.ImageProcessor;
+import com.michalwesoly.pattern.finder.api.exceptions.AmbiguousImageException;
+import com.michalwesoly.pattern.finder.api.exceptions.NoPatternException;
+import com.michalwesoly.pattern.finder.service.ImageProcessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.allegro.pattern.finder.api.exceptions;
+package com.michalwesoly.pattern.finder.api.exceptions;
 
 /**
  * Exception thrown if provided image has no pattern

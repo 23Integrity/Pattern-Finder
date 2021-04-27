@@ -1,4 +1,4 @@
-package com.allegro.pattern.finder;
+package com.michalwesoly.pattern.finder;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

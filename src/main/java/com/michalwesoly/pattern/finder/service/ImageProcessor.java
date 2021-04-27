@@ -1,7 +1,7 @@
-package com.allegro.pattern.finder.service;
+package com.michalwesoly.pattern.finder.service;
 
-import com.allegro.pattern.finder.api.exceptions.AmbiguousImageException;
-import com.allegro.pattern.finder.api.exceptions.NoPatternException;
+import com.michalwesoly.pattern.finder.api.exceptions.AmbiguousImageException;
+import com.michalwesoly.pattern.finder.api.exceptions.NoPatternException;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
